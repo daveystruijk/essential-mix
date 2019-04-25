@@ -24,6 +24,7 @@ fn run() -> Result<(), pa::Error> {
     let file = File::open(&path).unwrap();
     let decoder = Decoder::decode(file).unwrap();
 
+    // TODO: Move loading & conversion of mp3 to seperate file
     let buffers: Vec<Vec<[f32; CHANNELS]>> = decoder.filter_map(|r| match r {
             Ok(buffer) => {
                 let it = buffer.samples[0].iter().zip(buffer.samples[1].iter());
@@ -78,11 +79,14 @@ fn run() -> Result<(), pa::Error> {
     let callback = move |pa::OutputStreamCallbackArgs { buffer, time, .. }| {
 
         let buffer: &mut [[f32; CHANNELS]] = buffer.to_frame_slice_mut().unwrap();
+
         println!("the buffer");
         println!("{:?}", buffer.len());
+
+        // TODO: Make sure this data comes from an actual Track within the dsp graph
         buffer.copy_from_slice(&buffers[i]);
+
         i += 1;
-        // println!("{:?}", buffer);
 
         // graph.audio_requested(buffer, SAMPLE_HZ);
 
@@ -152,6 +156,7 @@ fn mp3_at<S: Sample>(pos: i32) -> S
 where
     S: Sample + FromSample<f32>,
 {
+    // TODO: Load from mp3 buffer
     (((pos as f32) * 2.0).sin() as f32).to_sample::<S>()
     // ((pos * PI * 2.0).sin() as f32).to_sample::<S>()
 
