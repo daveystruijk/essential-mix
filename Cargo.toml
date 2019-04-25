@@ -1,0 +1,11 @@
+[package]
+name = "essential-mix"
+version = "0.1.0"
+authors = ["Davey Struijk <mail@daveystruijk.com>"]
+edition = "2018"
+
+[dependencies]
+time_calc = "0.13.0"
+dsp-chain = "0.13.1"
+portaudio = "0.7.0"
+simplemad = "0.8.1"
